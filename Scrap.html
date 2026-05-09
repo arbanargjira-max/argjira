@@ -1,17 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="sq">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<meta http-equiv="Pragma" content="no-cache"/>
-<meta http-equiv="Expires" content="0"/>
 <title>Argjira — Blerje Ari Skrap</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; background: #f0eeea; color: #1a1a18; min-height: 100vh; }
 .page { max-width: 600px; margin: 0 auto; padding: 1rem 0.85rem 3rem; }
-
 .hdr { background: #344152; border-radius: 14px; padding: 15px 18px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: space-between; }
 .hdr-brand { display: flex; align-items: center; gap: 12px; }
 .hdr-logo { width: 38px; height: 38px; border-radius: 9px; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; color: #fff; }
@@ -20,23 +17,18 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
 .hdr-right { text-align: right; }
 .hdr-date { font-size: 12px; color: rgba(255,255,255,0.72); font-weight: 500; }
 .hdr-addr { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 2px; }
-
 .card { background: #fff; border: 1px solid rgba(0,0,0,0.09); border-radius: 14px; padding: 1rem 1.1rem; margin-bottom: 0.85rem; }
 .ctitle { font-size: 11px; font-weight: 700; color: #888780; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 0.9rem; }
-
 .row { display: flex; align-items: center; gap: 8px; margin-bottom: 9px; }
 .row label { font-size: 14px; color: #555450; min-width: 115px; }
 .row input, .row select { flex: 1; height: 44px; padding: 0 12px; font-size: 16px; font-family: inherit; border: 1px solid rgba(0,0,0,0.18); border-radius: 10px; background: #fff; color: #1a1a18; outline: none; -webkit-appearance: none; appearance: none; }
-.row input:focus, .row select:focus { border-color: #344152; box-shadow: 0 0 0 3px rgba(52,65,82,0.14); }
+.row input:focus, .row select:focus { border-color: #344152; }
 .unit { font-size: 13px; color: #888780; min-width: 52px; }
-
 .bbox { padding: 12px 14px; background: #e8e6e1; border-radius: 10px; margin-top: 6px; display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; }
 .bbox .bl { font-size: 13px; color: #555450; }
 .bbox .bv { font-size: 28px; font-weight: 700; color: #1a1a18; }
 .bbox .bu { font-size: 13px; color: #555450; }
 .inote { font-size: 12px; color: #888780; margin-top: 6px; }
-
-/* KARAT GRID */
 .kgrid { display: flex; flex-wrap: wrap; gap: 8px; }
 .kk { width: calc(50% - 4px); background: #e8e6e1; border-radius: 10px; padding: 12px 13px; cursor: pointer; border: 1.5px solid transparent; }
 .kk:active { opacity: 0.75; }
@@ -49,15 +41,8 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
 .ks { font-size: 12px; color: #888780; margin-top: 3px; }
 .kk.hl .ks { color: #0a5c42; }
 .km { font-size: 10px; color: #888780; margin-top: 3px; }
-
-.nrow { display: flex; align-items: center; gap: 8px; margin-top: 9px; padding: 11px 13px; background: #e8e6e1; border-radius: 10px; }
-.nrow-lbl { font-size: 13px; color: #555450; }
-.nrow-val { font-size: 16px; font-weight: 700; color: #1a1a18; margin-left: auto; }
-.nrow-eur { font-size: 12px; color: #888780; margin-left: 6px; }
-
-.btn-add { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 48px; border: none; border-radius: 10px; background: #344152; color: #fff; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 12px; -webkit-appearance: none; }
+.btn-add { display: flex; align-items: center; justify-content: center; width: 100%; height: 48px; border: none; border-radius: 10px; background: #344152; color: #fff; font-size: 16px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 12px; -webkit-appearance: none; }
 .btn-add:active { opacity: 0.82; }
-
 .ilist { display: flex; flex-direction: column; gap: 7px; }
 .irow { display: flex; align-items: center; gap: 8px; padding: 11px 13px; background: #e8e6e1; border-radius: 10px; }
 .irow .it { font-size: 13px; font-weight: 700; color: #555450; min-width: 90px; }
@@ -66,27 +51,22 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
 .irow .del { background: none; border: none; cursor: pointer; color: #888780; font-size: 24px; padding: 2px 6px; line-height: 1; font-family: inherit; }
 .irow .del:active { color: #cc2222; }
 .iempty { font-size: 13px; color: #888780; text-align: center; padding: 16px 0; }
-
 .tbar { background: #344152; border-radius: 10px; padding: 14px 18px; margin-top: 12px; display: flex; justify-content: space-between; align-items: center; }
 .tbar .tl { font-size: 13px; color: rgba(255,255,255,0.7); }
 .tbar .ts { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 3px; }
 .tbar .tv { font-size: 24px; font-weight: 700; color: #fff; }
-
 .abtns { display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 0.85rem; }
 .btn-pr, .btn-cl { display: flex; align-items: center; gap: 6px; padding: 0 16px; height: 42px; border-radius: 10px; font-size: 14px; font-family: inherit; cursor: pointer; }
 .btn-pr { border: 1px solid rgba(0,0,0,0.18); background: #fff; color: #555450; }
 .btn-cl { border: 1px solid rgba(0,0,0,0.09); background: transparent; color: #888780; }
-
 .hlist { display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .hitem { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: #e8e6e1; border-radius: 10px; font-size: 13px; }
 .htime { color: #888780; min-width: 44px; font-size: 12px; }
 .hdesc { color: #555450; flex: 1; }
 .hval { font-weight: 700; color: #1a1a18; white-space: nowrap; }
 .hempty { font-size: 13px; color: #888780; text-align: center; padding: 12px 0; }
-
 .foot { text-align: center; font-size: 11px; color: #888780; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,0.09); line-height: 1.9; }
 .iban { color: #FF0000; font-weight: 700; }
-
 @media print {
   .np { display: none !important; }
   .tbar, .hdr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -96,7 +76,6 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
 <body>
 <div class="page">
 
-<!-- HEADER -->
 <div class="hdr">
   <div class="hdr-brand">
     <div class="hdr-logo">&#9670;</div>
@@ -111,17 +90,16 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
   </div>
 </div>
 
-<!-- BURSA -->
 <div class="card np">
   <div class="ctitle">Çmimi i bursës</div>
   <div class="row">
     <label>Bursa EUR/kg</label>
-    <input type="number" id="bursa" value="130000" step="100" min="50000" max="250000" inputmode="numeric" oninput="recalc()"/>
+    <input type="number" id="bursa" value="130000" step="100" min="50000" max="250000" inputmode="numeric"/>
     <span class="unit">EUR/kg</span>
   </div>
-  <div class="row">
+  <div class="row" style="display:none;">
     <label>Zbritja</label>
-    <input type="number" id="zbritja" value="3000" step="100" min="0" max="20000" inputmode="numeric" oninput="recalc()"/>
+    <input type="number" id="zbritja" value="3000" step="100" min="0" max="20000" inputmode="numeric"/>
     <span class="unit">EUR/kg</span>
   </div>
   <div class="bbox">
@@ -132,92 +110,78 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
   <div class="inote">Bursa − Zbritja = Çmimi i blerjes</div>
 </div>
 
-<!-- KARAT GRID — çmimet default 130000-3000=127000 EUR/kg -->
 <div class="card np">
   <div class="ctitle">Çmimet sipas karatit</div>
   <div class="kgrid">
-
-    <div class="kk" onclick="selKarat('8')">
+    <div class="kk" data-kid="8">
       <div class="kl">8K / 333‰</div>
       <div class="kp"><span id="p8">38,10</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d8">2.343</span> den/g</div>
       <div class="km">Milëm: 300</div>
     </div>
-
-    <div class="kk" onclick="selKarat('9')">
+    <div class="kk" data-kid="9">
       <div class="kl">9K / 375‰</div>
       <div class="kp"><span id="p9">44,45</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d9">2.734</span> den/g</div>
       <div class="km">Milëm: 350</div>
     </div>
-
-    <div class="kk" onclick="selKarat('10')">
+    <div class="kk" data-kid="10">
       <div class="kl">10K / 417‰</div>
       <div class="kp"><span id="p10">50,80</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d10">3.124</span> den/g</div>
       <div class="km">Milëm: 400</div>
     </div>
-
-    <div class="kk hl" onclick="selKarat('14')">
+    <div class="kk hl" data-kid="14">
       <div class="kl">14K / 583‰</div>
       <div class="kp"><span id="p14">69,85</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d14">4.296</span> den/g</div>
       <div class="km">Milëm: 550</div>
     </div>
-
-    <div class="kk hl" onclick="selKarat('18')">
+    <div class="kk hl" data-kid="18">
       <div class="kl">18K / 750‰</div>
       <div class="kp"><span id="p18">92,71</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d18">5.702</span> den/g</div>
       <div class="km">Milëm: 730</div>
     </div>
-
-    <div class="kk" onclick="selKarat('20')">
+    <div class="kk" data-kid="20">
       <div class="kl">20K / 833‰</div>
       <div class="kp"><span id="p20">101,60</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d20">6.248</span> den/g</div>
       <div class="km">Milëm: 800</div>
     </div>
-
-    <div class="kk" onclick="selKarat('21')">
+    <div class="kk" data-kid="21">
       <div class="kl">21K / 875‰</div>
       <div class="kp"><span id="p21">110,49</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d21">6.795</span> den/g</div>
       <div class="km">Milëm: 870</div>
     </div>
-
-    <div class="kk" onclick="selKarat('22')">
+    <div class="kk" data-kid="22">
       <div class="kl">22K / 917‰</div>
       <div class="kp"><span id="p22">115,57</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d22">7.108</span> den/g</div>
       <div class="km">Milëm: 910</div>
     </div>
-
-    <div class="kk" onclick="selKarat('23')">
+    <div class="kk" data-kid="23">
       <div class="kl">23K / 985‰</div>
       <div class="kp"><span id="p23">125,09</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d23">7.693</span> den/g</div>
       <div class="km">Milëm: 985</div>
     </div>
-
-    <div class="kk" onclick="selKarat('995')">
+    <div class="kk" data-kid="995">
       <div class="kl">995‰</div>
       <div class="kp"><span id="p995">126,36</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d995">7.771</span> den/g</div>
       <div class="km">Milëm: 995</div>
     </div>
-
-    <div class="kk" onclick="selKarat('24')">
+    <div class="kk" data-kid="24">
       <div class="kl">24K / 999‰</div>
       <div class="kp"><span id="p24">126,87</span> <span class="kpu">EUR/g</span></div>
       <div class="ks"><span id="d24">7.803</span> den/g</div>
       <div class="km">Milëm: 999</div>
     </div>
-
   </div>
 </div>
 
-<!-- SHTO OBJEKT -->
 <div class="card np">
   <div class="ctitle">Shto objekt</div>
   <div class="row">
@@ -238,19 +202,17 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
   </div>
   <div class="row">
     <label>Pesha (gram)</label>
-    <input type="number" id="bruto" step="0.01" min="0" placeholder="0.00" inputmode="decimal"/>
+    <input type="text" id="bruto" inputmode="decimal" placeholder="0.00" style="flex:1;height:44px;padding:0 12px;font-size:16px;font-family:inherit;border:1px solid rgba(0,0,0,0.18);border-radius:10px;background:#fff;color:#1a1a18;outline:none;-webkit-appearance:none;appearance:none;"/>
     <span class="unit">gram</span>
   </div>
-  <button class="btn-add" onclick="addItem()">+ Shto në listë</button>
+  <button class="btn-add" id="btn_add">+ Shto në listë</button>
 </div>
 
-<!-- ACTION BUTTONS -->
 <div class="abtns np" id="abtns" style="display:none;">
-  <button class="btn-pr" onclick="window.print()">&#128438; Printo</button>
-  <button class="btn-cl" onclick="clearAll()">&#215; Pastro</button>
+  <button class="btn-pr" id="btn_print">&#128438; Printo</button>
+  <button class="btn-cl" id="btn_clear">&#215; Pastro</button>
 </div>
 
-<!-- LISTA -->
 <div class="card">
   <div class="ctitle">Objektet e blerjes</div>
   <div class="ilist" id="ilist">
@@ -265,7 +227,6 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
   </div>
 </div>
 
-<!-- HISTORIKU -->
 <div class="card np">
   <div class="ctitle">Historiku i llogaritjeve</div>
   <div class="hlist" id="hlist">
@@ -273,7 +234,6 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
   </div>
 </div>
 
-<!-- FOOTER -->
 <div class="foot">
   АРЃИРА ДООЕЛ-СКОПЈЕ &middot; Градиште 48, 1000 Скопје &middot; info@argjira.com<br>
   ЕДБ: МК408 201 451 3214 &middot; HALKBANK &middot; Bul. Kiril and Metodij 54<br>
@@ -281,21 +241,13 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
 </div>
 
 </div>
+
 <script>
 var MKD = 61.50;
-var KK = [
-  {id:"8",   m:300},
-  {id:"9",   m:350},
-  {id:"10",  m:400},
-  {id:"14",  m:550},
-  {id:"18",  m:730},
-  {id:"20",  m:800},
-  {id:"21",  m:870},
-  {id:"22",  m:910},
-  {id:"23",  m:985},
-  {id:"995", m:995},
-  {id:"24",  m:999}
-];
+var KK = {
+  "8":300, "9":350, "10":400, "14":550, "18":730,
+  "20":800, "21":870, "22":910, "23":985, "995":995, "24":999
+};
 var items = [];
 var hist = [];
 
@@ -303,69 +255,54 @@ function f(n, d) {
   if (d === undefined) d = 2;
   return Number(n).toLocaleString('de-DE', {minimumFractionDigits:d, maximumFractionDigits:d});
 }
-function getBursa()  { return parseFloat(document.getElementById('bursa').value) || 130000; }
+function getBursa()  { return parseFloat((document.getElementById('bursa').value || '').replace(',','.')) || 130000; }
 function getZb()     { return parseFloat(document.getElementById('zbritja').value) || 3000; }
 function getBlerja() { return getBursa() - getZb(); }
 function ppg(m)      { return (m * getBlerja()) / 1000000; }
-function gk(id)      { for (var i=0;i<KK.length;i++){if(KK[i].id===id)return KK[i];} return KK[3]; }
 function nowT()      { return new Date().toLocaleTimeString('sq',{hour:'2-digit',minute:'2-digit'}); }
 
-function recalc() {
+function updatePrices() {
   document.getElementById('blerja_baze').textContent = f(getBlerja(), 0);
-  for (var i=0; i<KK.length; i++) {
-    var p = ppg(KK[i].m);
-    var ep = document.getElementById('p'+KK[i].id);
-    var ed = document.getElementById('d'+KK[i].id);
+  var ids = Object.keys(KK);
+  for (var i = 0; i < ids.length; i++) {
+    var kid = ids[i];
+    var p = ppg(KK[kid]);
+    var ep = document.getElementById('p' + kid);
+    var ed = document.getElementById('d' + kid);
     if (ep) ep.textContent = f(p);
     if (ed) ed.textContent = f(p * MKD, 0);
   }
-  recalc_obj();
-  renderItems();
-}
-
-function selKarat(id) {
-  document.getElementById('sel_karat').value = id;
-  recalc_obj();
-}
-
-function recalc_obj() {
-  var sel = document.getElementById('sel_karat');
-  var inp = document.getElementById('bruto');
-  var k = gk(sel ? sel.value : '14');
-  var br = inp ? (parseFloat(inp.value) || 0) : 0;
-  var v = ppg(k.m) * br;
-  var nv = document.getElementById('neto_val');
-  var ne = document.getElementById('neto_eur');
-  if (nv) nv.textContent = br > 0 ? f(br) + ' gram' : '— gram';
-  if (ne) ne.textContent = br > 0 ? '= ' + f(v) + ' EUR' : '';
 }
 
 function addItem() {
   var selEl = document.getElementById('sel_karat');
   var inpEl = document.getElementById('bruto');
-  var sid = selEl ? selEl.value : '14';
-  var k = gk(sid);
-  var br = inpEl ? parseFloat(inpEl.value) : 0;
-  if (isNaN(br) || br <= 0) {
-    alert('Shëno peshën në gram!');
+  var kid = selEl.value;
+  var m = KK[kid];
+  var br = parseFloat(inpEl.value.replace(',', '.'));
+  if (!m || isNaN(br) || br <= 0) {
+    window.alert('Shëno peshën në gram!');
     return;
   }
   var blerja = getBlerja();
-  var p = (k.m * blerja) / 1000000;
+  var p = (m * blerja) / 1000000;
   var v = p * br;
-  var id = Date.now();
-  items.push({id:id, kid:sid, ne:br, v:v, t:nowT()});
-  hist.unshift({t:nowT(), desc:sid+'K · '+f(br)+'g', val:f(v)+' EUR'});
+  var id = new Date().getTime();
+  items.push({id:id, kid:kid, ne:br, v:v});
+  hist.unshift({t:nowT(), desc:kid+'K · '+f(br)+'g', val:f(v)+' EUR'});
   if (hist.length > 10) hist.pop();
-  if (inpEl) inpEl.value = '';
+  inpEl.value = '';
   renderItems();
   renderHist();
 }
 
 function removeItem(id) {
   var n = [];
-  for (var i=0;i<items.length;i++){if(items[i].id!==id)n.push(items[i]);}
-  items = n; renderItems();
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].id !== id) n.push(items[i]);
+  }
+  items = n;
+  renderItems();
 }
 
 function renderItems() {
@@ -374,40 +311,91 @@ function renderItems() {
   var a = document.getElementById('abtns');
   if (items.length === 0) {
     l.innerHTML = '<div class="iempty">Asnjë objekt i shtuar ende</div>';
-    b.style.display = 'none'; a.style.display = 'none'; return;
+    b.style.display = 'none';
+    a.style.display = 'none';
+    return;
   }
   l.innerHTML = '';
   var tot = 0;
-  for (var i=0;i<items.length;i++) {
-    var it = items[i]; tot += it.v;
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    tot += it.v;
     var d = document.createElement('div');
     d.className = 'irow';
-    d.innerHTML = '<span class="it">'+it.kid+'K</span><span class="iw">'+f(it.ne)+'g</span><span class="ip">'+f(it.v)+' EUR</span><button class="del np" onclick="removeItem('+it.id+')">&#215;</button>';
+    var btn = document.createElement('button');
+    btn.className = 'del np';
+    btn.textContent = '\u00D7';
+    btn.setAttribute('data-id', it.id);
+    d.innerHTML =
+      '<span class="it">'+it.kid+'K</span>' +
+      '<span class="iw">'+f(it.ne)+'g</span>' +
+      '<span class="ip">'+f(it.v)+' EUR</span>';
+    d.appendChild(btn);
     l.appendChild(d);
   }
   b.style.display = 'flex';
   document.getElementById('tot_eur').textContent = f(tot) + ' EUR';
-  document.getElementById('tot_mkd').textContent = f(tot*MKD,0) + ' den';
+  document.getElementById('tot_mkd').textContent = f(tot * MKD, 0) + ' den';
   a.style.display = 'flex';
+
+  // attach delete listeners
+  var dels = l.querySelectorAll('.del');
+  for (var j = 0; j < dels.length; j++) {
+    dels[j].addEventListener('click', function() {
+      removeItem(parseInt(this.getAttribute('data-id')));
+    });
+  }
 }
 
 function renderHist() {
   var h = document.getElementById('hlist');
-  if (!hist.length) { h.innerHTML='<div class="hempty">Asnjë llogaritje ende</div>'; return; }
+  if (!hist.length) { h.innerHTML = '<div class="hempty">Asnjë llogaritje ende</div>'; return; }
   h.innerHTML = '';
-  for (var i=0;i<hist.length;i++) {
-    var x=hist[i], d=document.createElement('div');
-    d.className='hitem';
-    d.innerHTML='<span class="htime">'+x.t+'</span><span class="hdesc">'+x.desc+'</span><span class="hval">'+x.val+'</span>';
+  for (var i = 0; i < hist.length; i++) {
+    var x = hist[i];
+    var d = document.createElement('div');
+    d.className = 'hitem';
+    d.innerHTML =
+      '<span class="htime">'+x.t+'</span>' +
+      '<span class="hdesc">'+x.desc+'</span>' +
+      '<span class="hval">'+x.val+'</span>';
     h.appendChild(d);
   }
 }
 
-function clearAll() { items=[]; renderItems(); }
+// attach all events via addEventListener — no inline JS
+document.addEventListener('DOMContentLoaded', function() {
 
-var nd = new Date();
-document.getElementById('hdr_date').textContent =
-  ('0'+nd.getDate()).slice(-2)+'.'+('0'+(nd.getMonth()+1)).slice(-2)+'.'+nd.getFullYear();
+  // date
+  var nd = new Date();
+  document.getElementById('hdr_date').textContent =
+    ('0'+nd.getDate()).slice(-2)+'.'+('0'+(nd.getMonth()+1)).slice(-2)+'.'+nd.getFullYear();
+
+  // bursa inputs
+  document.getElementById('bursa').addEventListener('input', updatePrices);
+  document.getElementById('bursa').addEventListener('change', updatePrices);
+  document.getElementById('zbritja').addEventListener('input', updatePrices);
+  document.getElementById('zbritja').addEventListener('change', updatePrices);
+
+  // karat cards
+  var cards = document.querySelectorAll('.kk');
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].addEventListener('click', function() {
+      var kid = this.getAttribute('data-kid');
+      document.getElementById('sel_karat').value = kid;
+    });
+  }
+
+  // add button
+  document.getElementById('btn_add').addEventListener('click', addItem);
+
+  // print & clear
+  document.getElementById('btn_print').addEventListener('click', function() { window.print(); });
+  document.getElementById('btn_clear').addEventListener('click', function() { items = []; renderItems(); });
+
+  updatePrices();
+});
 </script>
+
 </body>
 </html>
