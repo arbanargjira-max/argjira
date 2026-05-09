@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="sq">
 <head>
 <meta charset="UTF-8"/>
@@ -102,12 +101,12 @@ body { font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif; backgrou
     <input type="number" id="zbritja" value="3000" step="100" min="0" max="20000" inputmode="numeric"/>
     <span class="unit">EUR/kg</span>
   </div>
-  <div class="bbox">
+  <div class="bbox" style="display:none;">
     <span class="bl">Çmimi i blerjes:</span>
     <span class="bv" id="blerja_baze">127.000</span>
     <span class="bu">EUR/kg</span>
   </div>
-  <div class="inote">Bursa − Zbritja = Çmimi i blerjes</div>
+  <div class="inote" style="display:none;">Bursa − Zbritja = Çmimi i blerjes</div>
 </div>
 
 <div class="card np">
@@ -396,6 +395,5 @@ document.addEventListener('DOMContentLoaded', function() {
   updatePrices();
 });
 </script>
-
 </body>
 </html>
