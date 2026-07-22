@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Argjira — Gjurmues Porosish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root{
+    --header:#344152;
+    --header-dark:#26303d;
+    --gold:#b08d4f;
+    --gold-light:#d9c391;
+    --cream:#faf6ef;
+    --ink:#2b2b2b;
+    --muted:#6d6d68;
+    --line:#e3ddcd;
+    --white:#ffffff;
+    --s-porositur:#7a8ba0;
+    --s-pergatitje:#c98a3e;
+    --s-gati:#4f7a5c;
+    --s-dorezuar:#9a9a95;
+    --s-anuluar:#a33d3d;
+    --radius:6px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:Calibri, Arial, sans-serif;font-size:14px;line-height:1.4;}
+  h1,h2,h3,.display{font-family:'Cormorant Garamond', Georgia, serif;font-weight:600;color:var(--header);margin:0;}
+  header.top{background:var(--header);color:var(--white);padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  header.top h1{color:var(--white);font-size:26px;letter-spacing:0.3px;}
+  header.top .sub{font-size:12px;color:var(--gold-light);letter-spacing:1.5px;text-transform:uppercase;}
+  .wrap{max-width:1200px;margin:0 auto;padding:20px 24px 60px;}
+
+  .cards{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;}
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:12px 18px;min-width:120px;flex:1;text-align:center;}
+  .card .num{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:700;color:var(--header);}
+  .card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.8px;color:var(--muted);margin-top:2px;}
+  .card.balance{border-color:var(--gold);}
+  .card.balance .num{color:var(--gold);}
+
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:12px;}
+  .toolbar input, .toolbar select{padding:8px 10px;border:1px solid var(--line);border-radius:4px;font-family:inherit;font-size:13px;background:var(--cream);}
+  .toolbar input[type=text]{flex:1;min-width:160px;}
+  .spacer{flex:1;}
+  button{font-family:inherit;cursor:pointer;border:none;border-radius:4px;padding:9px 16px;font-size:13px;font-weight:600;}
+  .btn-primary{background:var(--gold);color:var(--white);}
+  .btn-primary:hover{background:#9a7a42;}
+  .btn-ghost{background:transparent;color:var(--header);border:1px solid var(--line);}
+  .btn-ghost:hover{background:var(--cream);}
+  .btn-small{padding:5px 10px;font-size:12px;}
+
+  table{width:100%;border-collapse:collapse;background:var(--white);border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);}
+  thead th{background:var(--header);color:var(--white);text-align:left;padding:10px 12px;font-size:11px;text-transform:uppercase;letter-spacing:0.6px;}
+  tbody td{padding:10px 12px;border-top:1px solid var(--line);font-size:13px;vertical-align:top;}
+  tbody tr:hover{background:#fbf9f3;cursor:pointer;}
+  tbody tr.owes td{color:var(--ink);}
+  .empty{padding:40px;text-align:center;color:var(--muted);}
+  .empty .display{font-size:20px;margin-bottom:6px;}
+
+  .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;}
+  .b-porositur{background:var(--s-porositur);}
+  .b-pergatitje{background:var(--s-pergatitje);}
+  .b-gati{background:var(--s-gati);}
+  .b-dorezuar{background:var(--s-dorezuar);}
+  .b-anuluar{background:var(--s-anuluar);}
+  .b-paguar{background:var(--s-gati);}
+  .b-papaguar{background:var(--s-anuluar);}
+
+  .overlay{position:fixed;inset:0;background:rgba(38,48,61,0.55);display:none;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto;z-index:50;}
+  .overlay.show{display:flex;}
+  .modal{background:var(--white);border-radius:8px;max-width:640px;width:100%;padding:26px 28px 22px;margin-bottom:40px;}
+  .modal h2{font-size:22px;margin-bottom:16px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+  .field{margin-bottom:12px;}
+  .field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px;}
+  .field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:4px;font-family:inherit;font-size:13px;background:var(--cream);}
+  .field textarea{resize:vertical;min-height:56px;}
+  .field .readout{padding:9px 10px;font-weight:700;color:var(--header);}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px;border-top:1px solid var(--line);padding-top:16px;}
+
+  .detail-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+  .status-row{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0;}
+  .status-row button{border:1px solid var(--line);background:var(--cream);color:var(--ink);font-weight:600;}
+  .status-row button.active{border-color:var(--gold);background:var(--gold);color:var(--white);}
+  .timeline{border-top:1px solid var(--line);margin-top:16px;padding-top:12px;}
+  .timeline .entry{font-size:12px;color:var(--muted);padding:4px 0;display:flex;gap:8px;}
+  .timeline .entry b{color:var(--ink);}
+  .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;font-size:13px;margin:10px 0;}
+  .info-grid div span{display:block;font-size:10px;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px;}
+  .pay-box{background:var(--cream);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin:12px 0;}
+  .pay-box .row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;}
+  .pay-box .row.total{font-weight:700;color:var(--header);border-top:1px solid var(--line);margin-top:6px;padding-top:8px;}
+  .pay-box .row.bilanc{font-weight:700;}
+  .pay-box .row.bilanc.owed{color:var(--s-anuluar);}
+  .pay-box .row.bilanc.clear{color:var(--s-gati);}
+
+  footer.note{text-align:center;color:var(--muted);font-size:11px;margin-top:30px;}
+
+  .sync-status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--gold-light);padding:8px 14px;border:1px solid rgba(255,255,255,0.25);border-radius:20px;}
+  .sync-dot{width:8px;height:8px;border-radius:50%;background:#9a9a95;}
+  .sync-dot.on{background:#5fae74;box-shadow:0 0 0 3px rgba(95,174,116,0.25);}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div>
+    <div class="sub">Argjira DOOEL</div>
+    <h1>Gjurmues Porosish</h1>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <div class="sync-status"><span class="sync-dot" id="syncDot"></span><span id="syncLabel">Modaliteti lokal</span></div>
+    <button class="btn-ghost" onclick="openSettings()">Cilësimet</button>
+    <button class="btn-ghost" onclick="exportData()">Eksporto (JSON)</button>
+    <button class="btn-ghost" onclick="document.getElementById('importFile').click()">Importo</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="cards" id="cards"></div>
+
+  <div class="toolbar">
+    <input type="text" id="searchBox" placeholder="Kërko klient, telefon, ID..." oninput="render()">
+    <select id="filterStatus" onchange="render()">
+      <option value="">Të gjitha statuset</option>
+      <option value="porositur">Porositur</option>
+      <option value="pergatitje">Në përgatitje</option>
+      <option value="gati">Gati</option>
+      <option value="dorezuar">Dorëzuar</option>
+      <option value="anuluar">Anuluar</option>
+    </select>
+    <select id="filterTip" onchange="render()">
+      <option value="">Shumicë + Pakicë</option>
+      <option value="Shumicë">Vetëm Shumicë</option>
+      <option value="Pakicë">Vetëm Pakicë</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="btn-primary" onclick="openNew()">+ Porosi e Re</button>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Data</th>
+        <th>Tipi</th>
+        <th>Klienti</th>
+        <th>Artikulli</th>
+        <th>Sasia</th>
+        <th>Bilanci</th>
+        <th>Statusi</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div class="empty" id="emptyState" style="display:none;">
+    <div class="display">Ende s'ka porosi</div>
+    Shto porosinë e parë me butonin "+ Porosi e Re"
+  </div>
+
+  <footer class="note">Në modalitetin lokal, të dhënat ruhen vetëm në këtë pajisje. Për listë të përbashkët mes disa personave në kohë reale, lidhu me bazën e përbashkët te "Cilësimet".</footer>
+</div>
+
+<!-- New/Edit Modal -->
+<div class="overlay" id="formOverlay">
+  <div class="modal">
+    <h2 id="formTitle">Porosi e Re</h2>
+    <div class="grid2">
+      <div class="field">
+        <label>Data e Porosisë</label>
+        <input type="date" id="f_data">
+      </div>
+      <div class="field">
+        <label>Tipi i Klientit</label>
+        <select id="f_tip">
+          <option>Shumicë</option>
+          <option>Pakicë</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Emri i Klientit / Dyqani</label>
+        <input type="text" id="f_klienti" list="clientList">
+        <datalist id="clientList"></datalist>
+      </div>
+      <div class="field">
+        <label>Telefoni</label>
+        <input type="text" id="f_telefoni">
+      </div>
+      <div class="field">
+        <label>Lloji i Artikullit</label>
+        <select id="f_lloji">
+          <option>Unazë</option><option>Vargë</option><option>Byzylyk</option>
+          <option>Vath</option><option>Kollare</option><option>Të përziera</option><option>Tjetër</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Karati / Finesa</label>
+        <select id="f_karat">
+          <option value="">—</option>
+          <option>8K</option><option>9K</option><option>10K</option><option>14K</option>
+          <option>18K</option><option>21K</option><option>22K</option><option>24K</option>
+          <option>Argjend</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Pesha (gram, opsionale)</label>
+        <input type="number" step="0.01" id="f_pesha">
+      </div>
+      <div class="field">
+        <label>Sasia</label>
+        <input type="number" step="1" min="1" id="f_sasia" value="1">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Përshkrim / Model</label>
+      <textarea id="f_pershkrim" placeholder="Detaje të artikullit, referencë modeli nga katalogu, ngjyrë ari, etj."></textarea>
+    </div>
+
+    <div class="grid3">
+      <div class="field">
+        <label>Çmimi Total</label>
+        <input type="number" step="1" id="f_kosto" oninput="updateBilanciPreview()">
+      </div>
+      <div class="field">
+        <label>Paradhënia</label>
+        <input type="number" step="1" id="f_paradhenie" oninput="updateBilanciPreview()">
+      </div>
+      <div class="field">
+        <label>Valuta</label>
+        <select id="f_valuta"><option>MKD</option><option>EUR</option></select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Bilanci (llogaritet vetë)</label>
+      <div class="readout" id="bilanciPreview">0</div>
+    </div>
+
+    <div class="field">
+      <label>Shënime</label>
+      <textarea id="f_shenime" placeholder="Shënime shtesë"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Pranoi (stafi)</label>
+      <input type="text" id="f_pranoi">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeForm()">Anulo</button>
+      <button class="btn-primary" onclick="saveOrder()">Ruaj Porosinë</button>
+    </div>
+  </div>
+</div>
+
+<!-- Detail Modal -->
+<div class="overlay" id="detailOverlay">
+  <div class="modal">
+    <div class="detail-head">
+      <div>
+        <div style="color:var(--gold);font-weight:700;font-size:12px;letter-spacing:1px;" id="d_id"></div>
+        <h2 id="d_klienti"></h2>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn-ghost btn-small" onclick="editCurrent()">Ndrysho</button>
+        <button class="btn-ghost btn-small" style="color:var(--s-anuluar);border-color:var(--s-anuluar);" onclick="deleteCurrent()">Fshi</button>
+      </div>
+    </div>
+
+    <div class="info-grid" id="d_info"></div>
+
+    <div class="pay-box" id="d_pay"></div>
+
+    <div>
+      <label style="font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px;">Ndrysho Statusin</label>
+      <div class="status-row" id="statusRow">
+        <button data-s="porositur">Porositur</button>
+        <button data-s="pergatitje">Në përgatitje</button>
+        <button data-s="gati">Gati</button>
+        <button data-s="dorezuar">Dorëzuar</button>
+        <button data-s="anuluar">Anuluar</button>
+      </div>
+    </div>
+
+    <div class="timeline" id="d_timeline"></div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" onclick="closeDetail()">Mbyll</button>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="overlay" id="settingsOverlay">
+  <div class="modal">
+    <h2>Cilësimet — Bazë e Përbashkët</h2>
+    <p style="font-size:13px;color:var(--muted);margin-top:-6px;">
+      Për të parë të njëjtën listë nga disa pajisje njëkohësisht, lidhu me një projekt falas Firebase.
+      Krijo një projekt te <span style="color:var(--header);font-weight:600;">console.firebase.google.com</span>,
+      shto një "Web App", aktivizo "Firestore Database", dhe ngjit këtu vlerat e konfigurimit (firebaseConfig).
+    </p>
+    <div class="grid2">
+      <div class="field"><label>apiKey</label><input type="text" id="fb_apiKey"></div>
+      <div class="field"><label>authDomain</label><input type="text" id="fb_authDomain"></div>
+      <div class="field"><label>projectId</label><input type="text" id="fb_projectId"></div>
+      <div class="field"><label>storageBucket</label><input type="text" id="fb_storageBucket"></div>
+      <div class="field"><label>messagingSenderId</label><input type="text" id="fb_messagingSenderId"></div>
+      <div class="field"><label>appId</label><input type="text" id="fb_appId"></div>
+    </div>
+    <div class="modal-actions" style="justify-content:space-between;">
+      <button class="btn-ghost" style="color:var(--s-anuluar);border-color:var(--s-anuluar);" onclick="disconnectFirebase()">Shkëput / Kthehu Lokal</button>
+      <div style="display:flex;gap:8px;">
+        <button class="btn-ghost" onclick="closeSettings()">Mbyll</button>
+        <button class="btn-primary" onclick="connectFirebase()">Lidh</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STORE_KEY='argjira_orders_v1';
+const COUNTER_KEY='argjira_orders_counter';
+const FB_CONFIG_KEY='argjira_fb_config';
+let orders = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+let currentId = null;
+let db = null;
+let fbEnabled = false;
+let fbUnsubscribe = null;
+
+const statusLabel = {porositur:'Porositur', pergatitje:'Në përgatitje', gati:'Gati', dorezuar:'Dorëzuar', anuluar:'Anuluar'};
+const statusClass = {porositur:'b-porositur', pergatitje:'b-pergatitje', gati:'b-gati', dorezuar:'b-dorezuar', anuluar:'b-anuluar'};
+
+function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(orders)); render(); }
+
+function nextId(){
+  let n = parseInt(localStorage.getItem(COUNTER_KEY) || '0', 10) + 1;
+  localStorage.setItem(COUNTER_KEY, n);
+  return 'P-' + String(n).padStart(4,'0');
+}
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+function updateSyncStatus(){
+  document.getElementById('syncDot').classList.toggle('on', fbEnabled);
+  document.getElementById('syncLabel').textContent = fbEnabled ? 'Lidhur — listë e përbashkët' : 'Modaliteti lokal';
+}
+
+function openSettings(){
+  const saved = JSON.parse(localStorage.getItem(FB_CONFIG_KEY) || 'null');
+  ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'].forEach(k=>{
+    document.getElementById('fb_'+k).value = saved ? (saved[k]||'') : '';
+  });
+  document.getElementById('settingsOverlay').classList.add('show');
+}
+function closeSettings(){ document.getElementById('settingsOverlay').classList.remove('show'); }
+
+function connectFirebase(){
+  const cfg = {};
+  ['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'].forEach(k=>{
+    cfg[k] = document.getElementById('fb_'+k).value.trim();
+  });
+  if(!cfg.apiKey || !cfg.projectId){ alert('Të paktën apiKey dhe projectId duhen plotësuar.'); return; }
+  localStorage.setItem(FB_CONFIG_KEY, JSON.stringify(cfg));
+  initFirebase(cfg);
+  closeSettings();
+}
+
+function disconnectFirebase(){
+  localStorage.removeItem(FB_CONFIG_KEY);
+  if(fbUnsubscribe){ fbUnsubscribe(); fbUnsubscribe = null; }
+  fbEnabled = false;
+  db = null;
+  orders = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+  updateSyncStatus();
+  render();
+  closeSettings();
+}
+
+function initFirebase(cfg){
+  try{
+    if(!firebase.apps.length){ firebase.initializeApp(cfg); }
+    db = firebase.firestore();
+    fbEnabled = true;
+    updateSyncStatus();
+    subscribeOrders();
+  }catch(err){
+    alert('Lidhja dështoi — kontrollo vlerat e konfigurimit. (' + err.message + ')');
+    fbEnabled = false;
+    updateSyncStatus();
+  }
+}
+
+function subscribeOrders(){
+  if(fbUnsubscribe) fbUnsubscribe();
+  fbUnsubscribe = db.collection('argjira_porosi_orders').orderBy('createdAt','desc').onSnapshot(
+    snap => {
+      orders = snap.docs.map(d=>d.data());
+      render();
+      if(currentId && document.getElementById('detailOverlay').classList.contains('show')){
+        const stillExists = orders.find(o=>o.id===currentId);
+        if(stillExists) openDetail(currentId); else closeDetail();
+      }
+    },
+    err => { console.error(err); alert('Lidhja me bazën e përbashkët u nda. Kontrollo internetin.'); }
+  );
+}
+
+function bilanci(o){ return (parseFloat(o.kosto)||0) - (parseFloat(o.paradhenie)||0); }
+
+function updateBilanciPreview(){
+  const k = parseFloat(document.getElementById('f_kosto').value)||0;
+  const p = parseFloat(document.getElementById('f_paradhenie').value)||0;
+  document.getElementById('bilanciPreview').textContent = (k-p).toLocaleString('sq-AL') + ' ' + document.getElementById('f_valuta').value;
+}
+document.getElementById('f_valuta').addEventListener('change', updateBilanciPreview);
+
+function openNew(){
+  currentId = null;
+  document.getElementById('formTitle').textContent = 'Porosi e Re';
+  ['f_klienti','f_telefoni','f_pesha','f_kosto','f_paradhenie','f_shenime','f_pranoi','f_pershkrim'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_data').value = todayStr();
+  document.getElementById('f_tip').value='Shumicë';
+  document.getElementById('f_lloji').value='Unazë';
+  document.getElementById('f_karat').value='';
+  document.getElementById('f_sasia').value=1;
+  document.getElementById('f_valuta').value='MKD';
+  updateBilanciPreview();
+  document.getElementById('formOverlay').classList.add('show');
+}
+
+function closeForm(){ document.getElementById('formOverlay').classList.remove('show'); }
+
+function saveOrder(){
+  const klienti = document.getElementById('f_klienti').value.trim();
+  if(!klienti){ alert('Shkruaj emrin e klientit.'); return; }
+
+  const data = {
+    data: document.getElementById('f_data').value,
+    tip: document.getElementById('f_tip').value,
+    klienti,
+    telefoni: document.getElementById('f_telefoni').value.trim(),
+    lloji: document.getElementById('f_lloji').value,
+    karat: document.getElementById('f_karat').value,
+    pesha: document.getElementById('f_pesha').value,
+    sasia: document.getElementById('f_sasia').value || 1,
+    pershkrim: document.getElementById('f_pershkrim').value.trim(),
+    kosto: document.getElementById('f_kosto').value,
+    paradhenie: document.getElementById('f_paradhenie').value,
+    valuta: document.getElementById('f_valuta').value,
+    shenime: document.getElementById('f_shenime').value.trim(),
+    pranoi: document.getElementById('f_pranoi').value.trim()
+  };
+
+  if(fbEnabled){
+    if(currentId){
+      db.collection('argjira_porosi_orders').doc(currentId).update(data)
+        .catch(err=>alert('Ruajtja dështoi: '+err.message));
+    }else{
+      db.runTransaction(t=>{
+        const counterRef = db.collection('meta').doc('porosi_counter');
+        return t.get(counterRef).then(doc=>{
+          const current = doc.exists ? (doc.data().n||0) : 0;
+          const next = current+1;
+          t.set(counterRef, {n: next});
+          return 'P-' + String(next).padStart(4,'0');
+        });
+      }).then(id=>{
+        const full = Object.assign({id, statusi:'porositur', timeline:[{date:new Date().toISOString(), status:'porositur', note:'Porosi e krijuar'}], createdAt: firebase.firestore.FieldValue.serverTimestamp()}, data);
+        return db.collection('argjira_porosi_orders').doc(id).set(full);
+      }).catch(err=>alert('Ruajtja dështoi: '+err.message));
+    }
+  }else{
+    if(currentId){
+      const o = orders.find(x=>x.id===currentId);
+      Object.assign(o, data);
+    } else {
+      const id = nextId();
+      orders.unshift(Object.assign({id, statusi:'porositur', timeline:[{date:new Date().toISOString(), status:'porositur', note:'Porosi e krijuar'}]}, data));
+    }
+    save();
+  }
+  closeForm();
+}
+
+function editCurrent(){
+  const o = orders.find(x=>x.id===currentId);
+  if(!o) return;
+  closeDetail();
+  document.getElementById('formTitle').textContent = 'Ndrysho Porosinë ' + o.id;
+  document.getElementById('f_data').value = o.data;
+  document.getElementById('f_tip').value = o.tip;
+  document.getElementById('f_klienti').value = o.klienti;
+  document.getElementById('f_telefoni').value = o.telefoni;
+  document.getElementById('f_lloji').value = o.lloji;
+  document.getElementById('f_karat').value = o.karat;
+  document.getElementById('f_pesha').value = o.pesha;
+  document.getElementById('f_sasia').value = o.sasia;
+  document.getElementById('f_pershkrim').value = o.pershkrim;
+  document.getElementById('f_kosto').value = o.kosto;
+  document.getElementById('f_paradhenie').value = o.paradhenie;
+  document.getElementById('f_valuta').value = o.valuta;
+  document.getElementById('f_shenime').value = o.shenime;
+  document.getElementById('f_pranoi').value = o.pranoi;
+  updateBilanciPreview();
+  document.getElementById('formOverlay').classList.add('show');
+}
+
+function deleteCurrent(){
+  if(!confirm('Fshi këtë porosi përfundimisht?')) return;
+  if(fbEnabled){
+    db.collection('argjira_porosi_orders').doc(currentId).delete()
+      .catch(err=>alert('Fshirja dështoi: '+err.message));
+  }else{
+    orders = orders.filter(x=>x.id!==currentId);
+    save();
+  }
+  closeDetail();
+}
+
+function openDetail(id){
+  currentId = id;
+  const o = orders.find(x=>x.id===id);
+  document.getElementById('d_id').textContent = o.id;
+  document.getElementById('d_klienti').textContent = o.klienti;
+  document.getElementById('d_info').innerHTML = `
+    <div><span>Tipi</span>${o.tip}</div>
+    <div><span>Telefoni</span>${o.telefoni||'—'}</div>
+    <div><span>Artikulli</span>${o.lloji}${o.karat? ' · '+o.karat:''}${o.pesha? ' · '+o.pesha+'g':''}</div>
+    <div><span>Sasia</span>${o.sasia}</div>
+    <div><span>Data porosisë</span>${o.data||'—'}</div>
+    <div><span>Pranoi</span>${o.pranoi||'—'}</div>
+    ${o.pershkrim? `<div style="grid-column:1/-1;"><span>Përshkrim/Model</span>${o.pershkrim}</div>` : ''}
+    ${o.shenime? `<div style="grid-column:1/-1;"><span>Shënime</span>${o.shenime}</div>` : ''}
+  `;
+  const bil = bilanci(o);
+  document.getElementById('d_pay').innerHTML = `
+    <div class="row total"><span>Çmimi Total</span><span>${(parseFloat(o.kosto)||0).toLocaleString('sq-AL')} ${o.valuta}</span></div>
+    <div class="row"><span>Paradhënia</span><span>${(parseFloat(o.paradhenie)||0).toLocaleString('sq-AL')} ${o.valuta}</span></div>
+    <div class="row bilanc ${bil>0?'owed':'clear'}"><span>Bilanci ${bil>0?'(mbetet pa u paguar)':'(shlyer)'}</span><span>${bil.toLocaleString('sq-AL')} ${o.valuta}</span></div>
+  `;
+  document.querySelectorAll('#statusRow button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.s === o.statusi);
+    b.onclick = () => setStatus(o.id, b.dataset.s);
+  });
+  const tl = o.timeline.slice().reverse().map(e=>{
+    const d = new Date(e.date);
+    return `<div class="entry"><b>${statusLabel[e.status]||e.status}</b> — ${d.toLocaleDateString('sq-AL')} ${d.toLocaleTimeString('sq-AL',{hour:'2-digit',minute:'2-digit'})} ${e.note? '· '+e.note:''}</div>`;
+  }).join('');
+  document.getElementById('d_timeline').innerHTML = '<label style="font-size:11px;text-transform:uppercase;color:var(--muted);letter-spacing:0.5px;">Historiku</label>' + tl;
+  document.getElementById('detailOverlay').classList.add('show');
+}
+
+function closeDetail(){ document.getElementById('detailOverlay').classList.remove('show'); }
+
+function setStatus(id, status){
+  const o = orders.find(x=>x.id===id);
+  if(!o || o.statusi === status) return;
+  const entry = {date: new Date().toISOString(), status};
+  if(fbEnabled){
+    db.collection('argjira_porosi_orders').doc(id).update({
+      statusi: status,
+      timeline: firebase.firestore.FieldValue.arrayUnion(entry)
+    }).catch(err=>alert('Ndryshimi dështoi: '+err.message));
+  }else{
+    o.statusi = status;
+    o.timeline.push(entry);
+    save();
+    openDetail(id);
+  }
+}
+
+function exportData(){
+  const blob = new Blob([JSON.stringify(orders, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'argjira_porosi_' + todayStr() + '.json';
+  a.click();
+}
+
+function importData(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try{
+      const incoming = JSON.parse(e.target.result);
+      if(!Array.isArray(incoming)) throw new Error('format');
+      if(fbEnabled){
+        const batch = db.batch();
+        incoming.forEach(o=>{
+          const ref = db.collection('argjira_porosi_orders').doc(o.id);
+          batch.set(ref, o, {merge:true});
+        });
+        batch.commit()
+          .then(()=>alert('Importimi u krye. ' + incoming.length + ' porosi u dërguan te baza e përbashkët.'))
+          .catch(err=>alert('Importimi dështoi: '+err.message));
+      }else{
+        const existingIds = new Set(orders.map(o=>o.id));
+        incoming.forEach(o => { if(!existingIds.has(o.id)) orders.push(o); });
+        save();
+        alert('Importimi u krye. ' + incoming.length + ' porosi u kontrolluan.');
+      }
+    }catch(err){ alert('Skedari s\'u lexua dot. Sigurohu që është eksportuar nga ky sistem.'); }
+  };
+  reader.readAsText(file);
+  evt.target.value = '';
+}
+
+function render(){
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const fs = document.getElementById('filterStatus').value;
+  const ftip = document.getElementById('filterTip').value;
+
+  const clients = [...new Set(orders.map(o=>o.klienti))].sort();
+  document.getElementById('clientList').innerHTML = clients.map(c=>`<option value="${c}">`).join('');
+
+  let filtered = orders.filter(o=>{
+    if(fs && o.statusi!==fs) return false;
+    if(ftip && o.tip!==ftip) return false;
+    if(q){
+      const hay = (o.klienti+' '+o.telefoni+' '+o.id).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const body = document.getElementById('tableBody');
+  document.getElementById('emptyState').style.display = orders.length? 'none':'block';
+  body.innerHTML = filtered.map(o=>{
+    const bil = bilanci(o);
+    return `
+    <tr onclick="openDetail('${o.id}')">
+      <td>${o.id}</td>
+      <td>${o.data||'—'}</td>
+      <td>${o.tip}</td>
+      <td>${o.klienti}${o.telefoni? '<br><span style=\"color:var(--muted);font-size:11px;\">'+o.telefoni+'</span>':''}</td>
+      <td>${o.lloji}${o.karat? ' · '+o.karat:''}</td>
+      <td>${o.sasia}</td>
+      <td><span class="badge ${bil>0?'b-papaguar':'b-paguar'}">${bil>0? bil.toLocaleString('sq-AL')+' '+o.valuta : 'Shlyer'}</span></td>
+      <td><span class="badge ${statusClass[o.statusi]}">${statusLabel[o.statusi]}</span></td>
+    </tr>`;
+  }).join('');
+
+  const counts = {porositur:0,pergatitje:0,gati:0,dorezuar:0,anuluar:0};
+  let totalOwed = 0;
+  orders.forEach(o=>{
+    counts[o.statusi] = (counts[o.statusi]||0)+1;
+    if(o.statusi!=='anuluar') totalOwed += bilanci(o);
+  });
+  document.getElementById('cards').innerHTML = `
+    <div class="card"><div class="num">${orders.length}</div><div class="lbl">Gjithsej</div></div>
+    <div class="card"><div class="num">${counts.porositur}</div><div class="lbl">Porositur</div></div>
+    <div class="card"><div class="num">${counts.pergatitje}</div><div class="lbl">Në përgatitje</div></div>
+    <div class="card"><div class="num">${counts.gati}</div><div class="lbl">Gati</div></div>
+    <div class="card"><div class="num">${counts.dorezuar}</div><div class="lbl">Dorëzuar</div></div>
+    <div class="card balance"><div class="num">${totalOwed.toLocaleString('sq-AL')}</div><div class="lbl">Bilanc i Pashlyer</div></div>
+  `;
+}
+
+updateSyncStatus();
+const savedFbConfig = JSON.parse(localStorage.getItem(FB_CONFIG_KEY) || 'null');
+if(savedFbConfig){ initFirebase(savedFbConfig); }
+render();
+</script>
+</body>
+</html>
