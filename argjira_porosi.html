@@ -223,6 +223,15 @@
       <textarea id="f_pershkrim" placeholder="Detaje të artikullit, referencë modeli nga katalogu, ngjyrë ari, etj."></textarea>
     </div>
 
+    <div class="field">
+      <label>Foto e Artikullit (opsionale)</label>
+      <input type="file" id="f_foto_input" accept="image/*" capture="environment" onchange="handleFotoSelect(event)">
+      <div id="fotoPreviewBox" style="display:none;margin-top:8px;">
+        <img id="fotoPreviewImg" style="max-width:140px;max-height:140px;border-radius:6px;border:1px solid var(--line);display:block;">
+        <button type="button" class="btn-ghost btn-small" style="margin-top:6px;" onclick="clearFoto()">Hiq foton</button>
+      </div>
+    </div>
+
     <div class="grid3">
       <div class="field">
         <label>Çmimi Total</label>
@@ -274,6 +283,10 @@
     </div>
 
     <div class="info-grid" id="d_info"></div>
+
+    <div id="d_fotoBox" style="display:none;margin:10px 0;">
+      <img id="d_fotoImg" style="max-width:220px;max-height:220px;border-radius:6px;border:1px solid var(--line);cursor:pointer;" onclick="window.open(this.src,'_blank')">
+    </div>
 
     <div class="pay-box" id="d_pay"></div>
 
@@ -332,6 +345,7 @@ let currentId = null;
 let db = null;
 let fbEnabled = false;
 let fbUnsubscribe = null;
+let pendingFoto = null;
 
 const statusLabel = {porositur:'Porositur', pergatitje:'Në përgatitje', gati:'Gati', dorezuar:'Dorëzuar', anuluar:'Anuluar'};
 const statusClass = {porositur:'b-porositur', pergatitje:'b-pergatitje', gati:'b-gati', dorezuar:'b-dorezuar', anuluar:'b-anuluar'};
@@ -422,6 +436,7 @@ document.getElementById('f_valuta').addEventListener('change', updateBilanciPrev
 
 function openNew(){
   currentId = null;
+  pendingFoto = null;
   document.getElementById('formTitle').textContent = 'Porosi e Re';
   ['f_klienti','f_telefoni','f_pesha','f_kosto','f_paradhenie','f_shenime','f_pranoi','f_pershkrim'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f_data').value = todayStr();
@@ -430,11 +445,42 @@ function openNew(){
   document.getElementById('f_karat').value='';
   document.getElementById('f_sasia').value=1;
   document.getElementById('f_valuta').value='MKD';
+  document.getElementById('f_foto_input').value='';
+  document.getElementById('fotoPreviewBox').style.display='none';
   updateBilanciPreview();
   document.getElementById('formOverlay').classList.add('show');
 }
 
 function closeForm(){ document.getElementById('formOverlay').classList.remove('show'); }
+
+function handleFotoSelect(evt){
+  const file = evt.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 700;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      pendingFoto = canvas.toDataURL('image/jpeg', 0.6);
+      document.getElementById('fotoPreviewImg').src = pendingFoto;
+      document.getElementById('fotoPreviewBox').style.display = 'block';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearFoto(){
+  pendingFoto = null;
+  document.getElementById('f_foto_input').value='';
+  document.getElementById('fotoPreviewBox').style.display='none';
+}
 
 function saveOrder(){
   const klienti = document.getElementById('f_klienti').value.trim();
@@ -454,7 +500,8 @@ function saveOrder(){
     paradhenie: document.getElementById('f_paradhenie').value,
     valuta: document.getElementById('f_valuta').value,
     shenime: document.getElementById('f_shenime').value.trim(),
-    pranoi: document.getElementById('f_pranoi').value.trim()
+    pranoi: document.getElementById('f_pranoi').value.trim(),
+    foto: pendingFoto
   };
 
   if(fbEnabled){
@@ -507,6 +554,14 @@ function editCurrent(){
   document.getElementById('f_valuta').value = o.valuta;
   document.getElementById('f_shenime').value = o.shenime;
   document.getElementById('f_pranoi').value = o.pranoi;
+  document.getElementById('f_foto_input').value='';
+  pendingFoto = o.foto || null;
+  if(pendingFoto){
+    document.getElementById('fotoPreviewImg').src = pendingFoto;
+    document.getElementById('fotoPreviewBox').style.display='block';
+  }else{
+    document.getElementById('fotoPreviewBox').style.display='none';
+  }
   updateBilanciPreview();
   document.getElementById('formOverlay').classList.add('show');
 }
@@ -538,6 +593,12 @@ function openDetail(id){
     ${o.pershkrim? `<div style="grid-column:1/-1;"><span>Përshkrim/Model</span>${o.pershkrim}</div>` : ''}
     ${o.shenime? `<div style="grid-column:1/-1;"><span>Shënime</span>${o.shenime}</div>` : ''}
   `;
+  if(o.foto){
+    document.getElementById('d_fotoImg').src = o.foto;
+    document.getElementById('d_fotoBox').style.display = 'block';
+  }else{
+    document.getElementById('d_fotoBox').style.display = 'none';
+  }
   const bil = bilanci(o);
   document.getElementById('d_pay').innerHTML = `
     <div class="row total"><span>Çmimi Total</span><span>${(parseFloat(o.kosto)||0).toLocaleString('sq-AL')} ${o.valuta}</span></div>
